@@ -14,6 +14,7 @@
 		"body-parser": "^1.20.3",
 		"cors": "^2.8.5",
 		"dprint": "^0.45.0",
+		"esbuild": "^0.24.2",
 		"eslint": "^8.57.0",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-react": "^7.33.2",
@@ -26,10 +27,12 @@
 		"vite": "^5.1.4"
 	},
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"server": "tsx ./server/main.ts",
+		"dev-app": "vite",
+		"build-app": "vite build",
+		"preview-app": "npm run build-app && vite preview",
+		"dev-server": "tsx ./server/main.ts",
+		"build-server": "esbuild server/main.ts --bundle --platform=node --outfile=build/server.cjs --allow-overwrite",
+		"preview-server": "npm run build-server && node ./build/server.cjs",
 		"validate-dprint": "dprint check",
 		"validate-eslint": "eslint .",
 		"validate-typescript": "tsc"

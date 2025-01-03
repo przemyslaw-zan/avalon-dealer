@@ -9,8 +9,7 @@ const __dirname = path.dirname( __filename );
 export default defineConfig( {
 	root: path.join( __dirname, 'app' ),
 	build: {
-		outDir: path.join( __dirname, 'build' ),
-		emptyOutDir: true
+		outDir: path.join( __dirname, 'build' )
 	},
 	plugins: [
 		vitePluginReact()
