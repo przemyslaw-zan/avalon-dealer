@@ -1,5 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { type ReactNode, useState } from 'react';
+import type { LobbyStatusResponse } from '../server/middlewares/PutLobbyStatus.ts';
 import { GameGuestPage } from './components/GameGuestPage.tsx';
 import { GameSetupPage } from './components/GameSetupPage.tsx';
 import { InfoPage } from './components/InfoPage.tsx';
@@ -9,9 +10,20 @@ import { clearGameIdInUrl } from './utils/gameId.ts';
 
 export type PageType = 'signature' | 'gameSetup' | 'gameGuest' | 'info';
 
+export type GameStatus = LobbyStatusResponse | null;
+
+export type PageProps = {
+	gameStatus: GameStatus;
+	setGameStatus: ( arg: GameStatus ) => void;
+	setCurrentPage: ( arg: PageType ) => void;
+};
+
 export function App(): ReactNode {
+	const [ gameStatus, setGameStatus ] = useState<GameStatus>( null );
 	const [ currentPage, setCurrentPage ] = useState<PageType>( 'signature' );
 	const [ optionsOpen, setOptionsOpen ] = useState( false );
+
+	const pageProps: PageProps = { gameStatus, setGameStatus, setCurrentPage };
 
 	return (
 		<>
@@ -32,10 +44,10 @@ export function App(): ReactNode {
 						⚙️ Options
 					</button>
 				</div>
-				{ currentPage === 'signature' && <SignaturePage setCurrentPage={ setCurrentPage }/> }
-				{ currentPage === 'gameSetup' && <GameSetupPage setCurrentPage={ setCurrentPage }/> }
-				{ currentPage === 'gameGuest' && <GameGuestPage setCurrentPage={ setCurrentPage }/> }
-				{ currentPage === 'info' && <InfoPage/> }
+				{ currentPage === 'signature' && <SignaturePage { ...pageProps }/> }
+				{ currentPage === 'gameSetup' && <GameSetupPage { ...pageProps }/> }
+				{ currentPage === 'gameGuest' && <GameGuestPage { ...pageProps }/> }
+				{ currentPage === 'info' && <InfoPage { ...pageProps }/> }
 			</div>
 
 			<div

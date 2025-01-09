@@ -18,7 +18,7 @@ export function PutGameSetup( req: Request, res: Response ): void {
 		existingGame = {
 			gameId: reqBody.gameId,
 			selectedCards: reqBody.selectedCards,
-			timestamp: Date.now(),
+			setupTimestamp: Date.now(),
 			hasBegun: reqBody.hasBegun,
 			players: [ {
 				id: reqBody.hostId,
@@ -44,9 +44,11 @@ export function PutGameSetup( req: Request, res: Response ): void {
 
 		shuffleArray( cardIds );
 
-		existingGame.players.forEach( ( player, i ) => {
-			player.cardId = cardIds[i];
-		} );
+		existingGame.players.forEach( ( player, i ) => player.cardId = cardIds[i] );
+		existingGame.beginTimestamp = Date.now();
+	} else {
+		existingGame.players.forEach( player => delete player.cardId );
+		delete existingGame.beginTimestamp;
 	}
 
 	res.send();

@@ -1,41 +1,18 @@
-import { type ReactNode, useEffect, useState } from 'react';
-import type { LobbyStatusResponse } from '../../server/middlewares/PutLobbyStatus.ts';
-import type { PageType } from '../App.tsx';
+import { type ReactNode, useEffect } from 'react';
+import type { PageProps } from '../App.tsx';
 import { type CardId, cards } from '../utils/cards.ts';
 import { fetchLobbyStatus } from '../utils/fetchLobbyStatus.ts';
 
-export function LobbyStatus( {
-	setCurrentPage,
-	setPlayerCount
-}: {
-	setCurrentPage: ( arg: PageType ) => void;
-	setPlayerCount?: ( arg: number ) => void;
-} ): ReactNode {
-	const [ status, setStatus ] = useState<null | LobbyStatusResponse>( null );
-
+export function LobbyStatus( { gameStatus, setGameStatus }: PageProps ): ReactNode {
 	useEffect( () => {
 		const intervalId = setInterval( () => {
-			fetchLobbyStatus().then( res => setStatus( res ) );
+			fetchLobbyStatus().then( res => setGameStatus( res ) );
 		}, 500 );
 
 		return (): void => clearInterval( intervalId );
 	}, [] );
 
-	useEffect( () => {
-		if ( !status ) {
-			return;
-		}
-
-		if ( setPlayerCount ) {
-			setPlayerCount( status.game.players.length );
-		}
-
-		if ( status.game.hasBegun ) {
-			setCurrentPage( 'info' );
-		}
-	}, [ status ] );
-
-	if ( !status ) {
+	if ( !gameStatus ) {
 		return (
 			<p>
 				Loading game status...
@@ -49,9 +26,9 @@ export function LobbyStatus( {
 				Selected cards:
 			</b>
 			<ol style={ { margin: 0 } }>
-				{ ( Object.keys( status.game.selectedCards ) as Array<CardId> )
+				{ ( Object.keys( gameStatus.game.selectedCards ) as Array<CardId> )
 					.reduce<Array<CardId>>( ( output, cardId ) => {
-						const count = status.game.selectedCards[cardId];
+						const count = gameStatus.game.selectedCards[cardId];
 
 						output.push( ...Array( count ).fill( cardId ) );
 
@@ -75,8 +52,8 @@ export function LobbyStatus( {
 				Players:
 			</b>
 			<ol style={ { margin: 0 } }>
-				{ [ ...status.game.players ].map( ( player, i ) => {
-					const knownPlayer = status.knownPlayers.find( p => p.id === player.id );
+				{ [ ...gameStatus.game.players ].map( ( player, i ) => {
+					const knownPlayer = gameStatus.knownPlayers.find( p => p.id === player.id );
 
 					let name = '?';
 

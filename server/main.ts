@@ -30,7 +30,8 @@ export type Player = {
 export type OngoingGame = {
 	gameId: string;
 	selectedCards: SelectedCards;
-	timestamp: number;
+	setupTimestamp: number;
+	beginTimestamp?: number;
 	hasBegun: boolean;
 	players: Array<{
 		id: string;
@@ -52,7 +53,7 @@ server.put( '/signature', PutSignature );
 
 setInterval( () => {
 	// Delete stale games.
-	ongoingGames.splice( 0, ongoingGames.length, ...ongoingGames.filter( game => Date.now() - game.timestamp < gameTimeout ) );
+	ongoingGames.splice( 0, ongoingGames.length, ...ongoingGames.filter( game => Date.now() - game.setupTimestamp < gameTimeout ) );
 
 	// Delete stale players.
 	knownPlayers.splice( 0, knownPlayers.length, ...knownPlayers.filter( player => Date.now() - player.expirationTimestamp < 0 ) );

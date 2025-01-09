@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import type { PlayerSignatureRequest, PlayerSignatureResponse } from '../../server/middlewares/PutSignature.ts';
-import type { PageType } from '../App.tsx';
+import type { PageProps } from '../App.tsx';
 import { getCookie, setCookie } from '../utils/cookies.ts';
 import { fetchLobbyStatus } from '../utils/fetchLobbyStatus.ts';
 import { getServerUrl } from '../utils/getServerUrl.ts';
@@ -10,11 +10,7 @@ const messages = {
 	taken: 'This name is taken!'
 };
 
-export function SignaturePage( {
-	setCurrentPage
-}: {
-	setCurrentPage: ( arg: PageType ) => void;
-} ): ReactNode {
+export function SignaturePage( { setCurrentPage }: PageProps ): ReactNode {
 	const [ playerName, setPlayerName ] = useState( '' );
 	const [ currentMessage, setCurrentMessage ] = useState( '' );
 
@@ -55,6 +51,10 @@ export function SignaturePage( {
 
 			if ( !lobbyStatus ) {
 				return setCurrentPage( 'gameSetup' );
+			}
+
+			if ( lobbyStatus.game.hasBegun ) {
+				return setCurrentPage( 'gameGuest' );
 			}
 
 			const host = lobbyStatus.game.players.find( p => p.isHost )!;

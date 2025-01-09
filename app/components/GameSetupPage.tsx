@@ -1,29 +1,19 @@
 import { type ReactNode, useEffect, useState } from 'react';
 import type { SelectedCards } from '../../server/main.ts';
 import type { GameSetupRequest } from '../../server/middlewares/PutGameSetup.ts';
-import type { PageType } from '../App.tsx';
+import type { GameStatus, PageProps } from '../App.tsx';
 import { type Card, cards } from '../utils/cards.ts';
 import { getCookie } from '../utils/cookies.ts';
 import { getGameIdFromUrl, setGameIdInUrl } from '../utils/gameId.ts';
 import { getServerUrl } from '../utils/getServerUrl.ts';
 import { LobbyStatus } from './LobbyStatus.tsx';
 
-export function GameSetupPage( {
-	setCurrentPage
-}: {
-	setCurrentPage: ( arg: PageType ) => void;
-} ): ReactNode {
-	const [ playerCount, setPlayerCount ] = useState( 0 );
+export function GameSetupPage( pageProps: PageProps ): ReactNode {
+	const { gameStatus, setCurrentPage } = pageProps;
+
 	const [ gameBegun, setGameBegun ] = useState( false );
-	const [ selectedCards, setSelectedCards ] = useState<SelectedCards>(
-		cards.reduce( ( output, card ) => {
-			output[card.id] = card.alwaysSelected ? 1 : 0;
-
-			return output;
-		}, {} as SelectedCards )
-	);
-
-	const equalPlayersAndCardCount = playerCount === Object.values( selectedCards ).reduce( ( a, b ) => a + b );
+	const [ selectedCards, setSelectedCards ] = useState<SelectedCards>( getInitialSelectedCards( gameStatus ) );
+	const [ canStartGame, setCanStartGame ] = useState( false );
 
 	setGameIdInUrl();
 
@@ -40,8 +30,22 @@ export function GameSetupPage( {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify( requestBody )
+		} ).then( () => {
+			if ( gameBegun ) {
+				setCurrentPage( 'info' );
+			}
 		} );
 	}, [ gameBegun, selectedCards ] );
+
+	useEffect( () => {
+		if ( !gameStatus ) {
+			return;
+		}
+
+		const equalPlayersAndCardCount = gameStatus.game.players.length === Object.values( selectedCards ).reduce( ( a, b ) => a + b );
+
+		setCanStartGame( equalPlayersAndCardCount );
+	}, [ gameStatus ] );
 
 	function updateSelectedCards( card: Card, eventTarget: HTMLInputElement ): void {
 		let newValue: number;
@@ -105,15 +109,27 @@ export function GameSetupPage( {
 					);
 				} ) }
 			</div>
-			<LobbyStatus setCurrentPage={ setCurrentPage } setPlayerCount={ setPlayerCount }/>
-			<button disabled={ !equalPlayersAndCardCount } onClick={ () => setGameBegun( true ) }>
+			<LobbyStatus { ...pageProps }/>
+			<button disabled={ !canStartGame } onClick={ () => setGameBegun( true ) }>
 				Start the game
 			</button>
-			{ !equalPlayersAndCardCount && (
+			{ !canStartGame && (
 				<span style={ { color: 'red' } }>
 					Uneven amount of players and selected cards!
 				</span>
 			) }
 		</>
 	);
+}
+
+function getInitialSelectedCards( gameStatus: GameStatus ): SelectedCards {
+	if ( gameStatus ) {
+		return gameStatus.game.selectedCards;
+	}
+
+	return cards.reduce( ( output, card ) => {
+		output[card.id] = card.alwaysSelected ? 1 : 0;
+
+		return output;
+	}, {} as SelectedCards );
 }
