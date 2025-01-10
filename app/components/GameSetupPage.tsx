@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { type ReactNode, useEffect, useState } from 'react';
 import type { SelectedCards } from '../../server/main.ts';
 import type { GameSetupRequest } from '../../server/middlewares/PutGameSetup.ts';
@@ -81,7 +82,7 @@ export function GameSetupPage( pageProps: PageProps ): ReactNode {
 	return (
 		<>
 			<b style={ { display: 'block', textAlign: 'center' } }>
-				Select cards:
+				{ t( 'selectCards' ) }
 			</b>
 			<div>
 				{ cards.map( card => {
@@ -103,7 +104,7 @@ export function GameSetupPage( pageProps: PageProps ): ReactNode {
 									color: card.affiliation === 'evil' ? 'red' : 'blue'
 								} }
 							>
-								{ card.name }
+								{ t( card.id ) }
 							</span>
 						</div>
 					);
@@ -111,11 +112,11 @@ export function GameSetupPage( pageProps: PageProps ): ReactNode {
 			</div>
 			<LobbyStatus { ...pageProps }/>
 			<button disabled={ !canStartGame } onClick={ () => setGameBegun( true ) }>
-				Start the game
+				{ t( 'startTheGame' ) }
 			</button>
 			{ !canStartGame && (
 				<span style={ { color: 'red' } }>
-					Uneven amount of players and selected cards!
+					{ t( 'unevenPlayersCards' ) }
 				</span>
 			) }
 		</>

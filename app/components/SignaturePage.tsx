@@ -1,14 +1,10 @@
+import { t } from 'i18next';
 import { type ReactNode, useEffect, useState } from 'react';
 import type { PlayerSignatureRequest, PlayerSignatureResponse } from '../../server/middlewares/PutSignature.ts';
 import type { PageProps } from '../App.tsx';
 import { getCookie, setCookie } from '../utils/cookies.ts';
 import { fetchLobbyStatus } from '../utils/fetchLobbyStatus.ts';
 import { getServerUrl } from '../utils/getServerUrl.ts';
-
-const messages = {
-	short: 'This name is too short!',
-	taken: 'This name is taken!'
-};
 
 export function SignaturePage( { setCurrentPage }: PageProps ): ReactNode {
 	const [ playerName, setPlayerName ] = useState( '' );
@@ -32,13 +28,13 @@ export function SignaturePage( { setCurrentPage }: PageProps ): ReactNode {
 			const resBody: PlayerSignatureResponse = res;
 
 			if ( resBody.status === 'short' ) {
-				setCurrentMessage( messages.short );
+				setCurrentMessage( t( 'nameTooShort' ) );
 
 				return;
 			}
 
 			if ( resBody.status === 'taken' ) {
-				setCurrentMessage( messages.taken );
+				setCurrentMessage( t( 'nameTaken' ) );
 
 				return;
 			}
@@ -71,14 +67,14 @@ export function SignaturePage( { setCurrentPage }: PageProps ): ReactNode {
 		<>
 			<div style={ { display: 'flex', gap: '5px' } }>
 				<label>
-					Player name:
+					{ t( 'playerName' ) }:
 				</label>
 				<input
 					value={ playerName }
 					onChange={ event => {
 						const newValue = sanitizeName( event.target.value );
 
-						setCurrentMessage( newValue.trim().length < 2 ? messages.short : '' );
+						setCurrentMessage( newValue.trim().length < 2 ? t( 'nameTooShort' ) : '' );
 						setPlayerName( newValue );
 					} }
 				/>
@@ -87,7 +83,7 @@ export function SignaturePage( { setCurrentPage }: PageProps ): ReactNode {
 				disabled={ playerName.length < 2 }
 				onClick={ () => signatureRequest() }
 			>
-				Next
+				{ t( 'next' ) }
 			</button>
 			<span>
 				{ currentMessage }

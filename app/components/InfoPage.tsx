@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { type ReactNode, useEffect } from 'react';
 import type { GameStatus, PageProps } from '../App.tsx';
 import { cards } from '../utils/cards.ts';
@@ -42,7 +43,7 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 					{ playerName }
 				</b>
 				<span>
-					Game in progress, please wait...
+					{ t( 'gameInProgress' ) }
 				</span>
 			</>
 		);
@@ -78,19 +79,19 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 	return (
 		<>
 			<i>
-				Game begun at: { getDate( gameStatus ) }
+				{ t( 'gameBegunAt' ) }: { getDate( gameStatus ) }
 			</i>
 			<b style={ { fontSize: '1.5rem' } }>
 				{ playerName }
 			</b>
 			<b style={ { fontSize: '2rem', color: playerCard.affiliation === 'good' ? 'blue' : 'red' } }>
-				{ playerCard.name }
+				{ t( playerCard.id ) }
 			</b>
 
 			{ playerCardId === 'merlin' && (
 				<>
 					<span>
-						Evil players are:
+						{ t( 'evilPlayersAre' ) }:
 					</span>
 					<ul>
 						{ playerMap
@@ -106,7 +107,7 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 			{ playerCardId === 'percival' && (
 				<>
 					<span>
-						Merlin is:
+						{ t( 'merlinIs' ) }:
 					</span>
 					<ul>
 						{ playerMap
@@ -122,13 +123,13 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 			{ [ 'mordred', 'morgana', 'assassin', 'minion' ].includes( playerCardId ) && (
 				<>
 					<span>
-						{ otherEvilPlayers.length ? 'Other evil players are:' : 'You are the only evil player.' }
+						{ otherEvilPlayers.length ? `${t( 'otherEvilPlayersAre' )}:` : t( 'onlyEvilPlayer' ) }
 					</span>
 					<ul>
 						{ otherEvilPlayers.map( player => (
 							<li key={ player.id }>
 								{ player.name }
-								{ player.cardId === 'evilLancelot' && ` (${player.card.name})` }
+								{ player.cardId === 'evilLancelot' && ` (${t( player.card.id )})` }
 							</li>
 						) ) }
 					</ul>
@@ -137,7 +138,7 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 			{ playerGameData.isHost && (
 				<button
 					onClick={ () => {
-						const confirmed = confirm( 'Are you sure to end this game and go back to lobby?' );
+						const confirmed = confirm( t( 'endGameConfirmation' ) );
 
 						if ( !confirmed ) {
 							return;
@@ -147,7 +148,7 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 						setCurrentPage( 'gameSetup' );
 					} }
 				>
-					Restart the game
+					{ t( 'restartTheGame' ) }
 				</button>
 			) }
 		</>

@@ -1,12 +1,12 @@
-import { QRCodeSVG } from 'qrcode.react';
+import { t } from 'i18next';
 import { type ReactNode, useState } from 'react';
 import type { LobbyStatusResponse } from '../server/middlewares/PutLobbyStatus.ts';
 import { GameGuestPage } from './components/GameGuestPage.tsx';
 import { GameSetupPage } from './components/GameSetupPage.tsx';
 import { InfoPage } from './components/InfoPage.tsx';
+import { Options } from './components/Options.tsx';
 import { SignaturePage } from './components/SignaturePage.tsx';
-import { clearCookie } from './utils/cookies.ts';
-import { clearGameIdInUrl } from './utils/gameId.ts';
+import { type SupportedLanguage, defaultLanguage } from './utils/initLangs.ts';
 
 export type PageType = 'signature' | 'gameSetup' | 'gameGuest' | 'info';
 
@@ -22,11 +22,16 @@ export function App(): ReactNode {
 	const [ gameStatus, setGameStatus ] = useState<GameStatus>( null );
 	const [ currentPage, setCurrentPage ] = useState<PageType>( 'signature' );
 	const [ optionsOpen, setOptionsOpen ] = useState( false );
+	const [ selectedLanguage, setSelectedLanguage ] = useState<SupportedLanguage>( defaultLanguage );
 
 	const pageProps: PageProps = { gameStatus, setGameStatus, setCurrentPage };
 
 	return (
-		<>
+		<div
+			style={ {
+				fontFamily: 'Arial'
+			} }
+		>
 			<div
 				style={ {
 					position: 'absolute',
@@ -41,7 +46,7 @@ export function App(): ReactNode {
 			>
 				<div style={ { width: '100%' } }>
 					<button onClick={ () => setOptionsOpen( !optionsOpen ) } style={ { width: 'fit-content' } }>
-						⚙️ Options
+						⚙️ { t( 'options' ) }
 					</button>
 				</div>
 				{ currentPage === 'signature' && <SignaturePage { ...pageProps }/> }
@@ -50,37 +55,7 @@ export function App(): ReactNode {
 				{ currentPage === 'info' && <InfoPage { ...pageProps }/> }
 			</div>
 
-			<div
-				style={ {
-					position: 'absolute',
-					top: '0px',
-					right: '0px',
-					display: optionsOpen ? 'flex' : 'none',
-					flexDirection: 'column',
-					gap: '10px',
-					padding: '5px',
-					backgroundColor: 'white',
-					border: '1px black solid'
-				} }
-			>
-				<QRCodeSVG value={ window.location.href }/>
-				<button
-					onClick={ () => {
-						clearGameIdInUrl();
-						window.location.reload();
-					} }
-				>
-					New game
-				</button>
-				<button
-					onClick={ () => {
-						clearCookie();
-						window.location.reload();
-					} }
-				>
-					Change name
-				</button>
-			</div>
-		</>
+			<Options open={ optionsOpen } selectedLanguage={ selectedLanguage } setSelectedLanguage={ setSelectedLanguage }/>
+		</div>
 	);
 }

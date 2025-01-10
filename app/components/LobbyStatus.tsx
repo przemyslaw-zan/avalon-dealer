@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import { type ReactNode, useEffect } from 'react';
 import type { PageProps } from '../App.tsx';
 import { type CardId, cards } from '../utils/cards.ts';
@@ -15,7 +16,7 @@ export function LobbyStatus( { gameStatus, setGameStatus }: PageProps ): ReactNo
 	if ( !gameStatus ) {
 		return (
 			<p>
-				Loading game status...
+				{ t( 'loadingGameStatus' ) }
 			</p>
 		);
 	}
@@ -23,7 +24,7 @@ export function LobbyStatus( { gameStatus, setGameStatus }: PageProps ): ReactNo
 	return (
 		<>
 			<b style={ { display: 'block', textAlign: 'center' } }>
-				Selected cards:
+				{ t( 'selectedCards' ) }:
 			</b>
 			<ol style={ { margin: 0 } }>
 				{ ( Object.keys( gameStatus.game.selectedCards ) as Array<CardId> )
@@ -42,14 +43,14 @@ export function LobbyStatus( { gameStatus, setGameStatus }: PageProps ): ReactNo
 								key={ cardId + i }
 								style={ { color: card.affiliation === 'evil' ? 'red' : 'blue' } }
 							>
-								{ card.name }
+								{ t( card.id ) }
 							</li>
 						);
 					} ) }
 			</ol>
 
 			<b style={ { display: 'block', textAlign: 'center' } }>
-				Players:
+				{ t( 'players' ) }:
 			</b>
 			<ol style={ { margin: 0 } }>
 				{ [ ...gameStatus.game.players ].map( ( player, i ) => {
