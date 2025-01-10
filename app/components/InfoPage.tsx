@@ -137,6 +137,12 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 			{ playerGameData.isHost && (
 				<button
 					onClick={ () => {
+						const confirmed = confirm( 'Are you sure to end this game and go back to lobby?' );
+
+						if ( !confirmed ) {
+							return;
+						}
+
 						setGameStatus( null );
 						setCurrentPage( 'gameSetup' );
 					} }
