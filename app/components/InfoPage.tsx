@@ -88,6 +88,8 @@ export function InfoPage( { gameStatus, setGameStatus, setCurrentPage }: PagePro
 				{ t( playerCard.id ) }
 			</b>
 
+			<img style={ { maxWidth: '300px', maxHeight: '300px' } } src={ playerCard.imgSrc }/>
+
 			{ playerCardId === 'merlin' && (
 				<>
 					<span>

@@ -8,6 +8,9 @@ const __dirname = upath.dirname( __filename );
 
 export default defineConfig( {
 	root: upath.join( __dirname, 'app' ),
+	assetsInclude: [
+		upath.join( __dirname, 'app', 'assets', '*.jpg' )
+	],
 	build: {
 		outDir: upath.join( __dirname, 'build', 'app' ),
 		emptyOutDir: true
