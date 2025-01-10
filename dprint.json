@@ -1,13 +1,17 @@
 {
 	"plugins": [
-		"https://plugins.dprint.dev/typescript-0.89.3.wasm",
-		"https://plugins.dprint.dev/json-0.19.2.wasm"
+		"https://plugins.dprint.dev/g-plane/markup_fmt-v0.18.0.wasm",
+		"https://plugins.dprint.dev/json-0.19.2.wasm",
+		"https://plugins.dprint.dev/typescript-0.89.3.wasm"
 	],
 	"excludes": [
 		"**/node_modules",
 		"datamine",
 		"package-lock.json"
 	],
+	"markup": {
+		"useTabs": true
+	},
 	"json": {
 		"newLineKind": "lf",
 		"useTabs": true

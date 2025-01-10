@@ -2,11 +2,12 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import type { CardId } from '../app/utils/cards.ts';
-import { PORT } from '../config.ts';
 import { PutGameGuest } from './middlewares/PutGameGuest.ts';
 import { PutGameSetup } from './middlewares/PutGameSetup.ts';
 import { PutLobbyStatus } from './middlewares/PutLobbyStatus.ts';
 import { PutSignature } from './middlewares/PutSignature.ts';
+
+const PORT = 3000;
 
 // 6h
 const gameTimeout = 1000 * 60 * 60 * 6;

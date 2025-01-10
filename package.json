@@ -24,6 +24,7 @@
 		"react-dom": "^18.2.0",
 		"tsx": "^4.7.0",
 		"typescript": "^5.4.2",
+		"upath": "^2.0.1",
 		"vite": "^5.1.4"
 	},
 	"optionalDependencies": {
@@ -34,8 +35,8 @@
 		"build-app": "vite build",
 		"preview-app": "npm run build-app && vite preview",
 		"dev-server": "tsx ./server/main.ts",
-		"build-server": "esbuild server/main.ts --bundle --platform=node --outfile=build/server.cjs --allow-overwrite",
-		"preview-server": "npm run build-server && node ./build/server.cjs",
+		"build-server": "esbuild server/main.ts --bundle --platform=node --outfile=build/server/server.cjs",
+		"preview-server": "npm run build-server && node ./build/server/server.cjs",
 		"validate-dprint": "dprint check",
 		"validate-eslint": "eslint .",
 		"validate-typescript": "tsc"

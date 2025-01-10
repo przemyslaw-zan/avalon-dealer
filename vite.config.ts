@@ -1,15 +1,16 @@
 import vitePluginReact from '@vitejs/plugin-react';
-import path from 'path';
+import upath from 'upath';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 
 const __filename = fileURLToPath( import.meta.url );
-const __dirname = path.dirname( __filename );
+const __dirname = upath.dirname( __filename );
 
 export default defineConfig( {
-	root: path.join( __dirname, 'app' ),
+	root: upath.join( __dirname, 'app' ),
 	build: {
-		outDir: path.join( __dirname, 'build' )
+		outDir: upath.join( __dirname, 'build', 'app' ),
+		emptyOutDir: true
 	},
 	plugins: [
 		vitePluginReact()
